@@ -1,0 +1,149 @@
+{% extends "store/base.html" %}
+
+
+{% load static %}
+
+    {% block content %}
+        <br> 
+    {% if cart_products %}
+    <div class="container" align="center">
+        {% for product in cart_products %}
+        <br><br><br>
+        <div class="card mb-3" style="max-width: 790px;">
+            <div class="row g-0">
+              <div class="col-md-4">
+                <img src="{{product.image.url}}" class="img-fluid rounded-start">
+              </div>
+              <div class="col-md-8">
+                <div class="card-body">
+                  <a href="{% url "product" product.id %}" class="card-title" style="font-size:1.5em;">{{product.name}}</a><br>
+                        {% if product.is_sale %}
+                            <strike style="font-size:1.3em;">${{product.price}}</strike>
+                            &nbsp;
+                            <p style="font-size:1.2em;">${{product.sale_price}}</p>
+                            <br>
+                            <p style="font-size:1em;">{{product.description}}</p>
+    
+                        {% else %}
+                            <p style="font-size:1.3em;">${{product.price}}</p><br>
+                            <p style="font-size:1.2em;">{{product.description}}</p>
+                        {% endif %}
+                            <br>
+                            <div class="row justify-content-center">
+                            
+                            <div class="col-md-2">
+                            <select class="form-select" id="select{{product.id}}">
+                        {% for key, value in quantities.items %}
+                            {% if key == product.id|slugify %}
+                                <option selected>{{ value }}</option>
+                            {% endif %}
+                        {% endfor %}
+                            <option value="1">1</option>
+                            <option value="2">2</option>
+                            <option value="3">3</option>
+                            <option value="4">4</option>
+                            <option value="5">5</option>
+                          </select>
+                        </div>
+                      </div>
+                     <br>   
+                  <button type="button" data-index="{{product.id}}" class="btn btn-secondary update-cart">Update</button>
+                  <button type="button" data-index="{{product.id}}" class="btn btn-danger delete-product">Remove</button>
+                </div>
+              </div>
+            </div>
+        </div>
+        {% endfor %}
+        <br><br>
+        <div align="center">
+            <div class="card" style="max-width: 790px;">
+                <div class="card-body">
+                  <br><p style="font-size:2em; font-weight:bold;">Your Cart Summary</p><br>
+                  <p style="font-size:1.1em;">Enjoy free shipping and free returns on all orders.</p>
+                </div>
+                <ul class="list-group list-group-flush">
+                {% for product in cart_products %}
+                  <li class="list-group-item">
+                    <strong>{{product.name}}</strong> - {% for key, value in quantities.items %}
+                    {% if key == product.id|slugify %}
+                    {{ value }} Piece
+                    {% endif %}
+                    {% endfor %}</li>
+                {% endfor %}
+                </ul>
+                <div class="card-body">
+                  <p style="font-size:1.5em; font-weight:bold;">Total: ${{totals}}</p><br>
+                  <a href="{% url "checkout" %}" class="btn btn-success" style="font-size:1.3em;">Checkout</a>
+                </div>
+              </div>
+            </div>
+        </div>
+        <br><br><br><br>
+    </div>
+        {% else %}
+        <div align="center">
+        <img src="https://undsgn.com/uncode/wp-content/uploads/2020/06/pngkit_empty-sign-png_3224362-min.png" alt="">
+        <br>
+        <p style="font-size:2em; font-weight:bold">Your cart is currently empty</p>
+        <br>
+        <p style="font-size:1.5em">Before proceed to checkout you must add some products to your shopping cart. You will find a lot of interesting products on our "All Products" page.</p>
+        </div>
+        <br><br>
+        {% endif %}
+ 
+        <br><br><br><br>
+
+
+        <script>
+            $(document).on('click', '.update-cart', function(e){
+                e.preventDefault();
+                var productid = $(this).data('index');
+                $.ajax({
+        
+                    type: 'POST',
+                    url: '{% url "cart_update" %}',
+                    data: {
+                        product_id: $(this).data('index'),
+                        product_qty: $('#select' + productid + ' option:selected').text(),
+                        csrfmiddlewaretoken: '{{ csrf_token }}',
+                        action: 'post'
+                    },
+                    
+                    success: function(json) {
+                        location.reload();
+                    },
+        
+                    error: function(xhr, errmsg,err){
+        
+                    }
+        
+                });
+            })
+
+            $(document).on('click', '.delete-product', function(e){
+                e.preventDefault();
+               
+                $.ajax({
+        
+                    type: 'POST',
+                    url: '{% url "cart_delete" %}',
+                    data: {
+                        product_id: $(this).data('index'),
+                        csrfmiddlewaretoken: '{{ csrf_token }}',
+                        action: 'post'
+                    },
+                    
+                    success: function(json) {
+                        location.reload();
+                    },
+        
+                    error: function(xhr, errmsg,err){
+        
+                    }
+        
+                });
+            })
+        </script>
+
+        {% endblock content %}
+       

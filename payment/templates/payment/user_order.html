@@ -1,0 +1,58 @@
+{% extends "store/base.html" %}
+
+{% block content %}
+
+
+{% for orders in orders  %}
+
+<div class="container" style="font-size:1.1em;">
+    <div class="row">
+            <div class="col-7">
+                <br><br><br>
+                <div class="card">
+                    <div class="card-header" style="background-color: #2a2a2a;">
+                        <p style="color:white; font-weight: bold;">Order {{orders.id}} - ${{orders.amount_paid}}</p>
+                    </div>
+                    <div class="card-body" style="background-color: #e2e2e2;">
+                        <strong>Email:</strong> {{orders.email}} <br>
+                        <strong>Shipping Status:</strong> 
+                        
+                        {% if orders.shipped == False %}
+                        Order is being prepared.
+                        {% else %}
+                        Shipped
+                        {% endif %}<br>
+                        {% if orders.date_shipped %}
+                        <strong>Date Shipped:</strong> {{orders.date_shipped}}
+                        {% else %}
+                        <strong>Date Ordered:</strong>  {{orders.date_ordered}}
+                        {% endif %}
+                        <br><br><br>
+                        <strong>Full Name:</strong> {{orders.full_name}} <br>
+                        <strong>Shipping Address:</strong> {{orders.shipping_address}} <br>
+                        <br><br>
+                        {% for item in orders.orderitem_set.all %}
+                        <strong>Product Name:</strong> {{item.product}} <br>
+                        <strong>Product Quantity:</strong> {{item.quantity}} <br>
+                        <strong>Product Price:</strong> ${{item.price}} <br>
+                        <br>
+                        {% endfor %}
+                        {% if orders.shipped == False %}
+                        <form action="{% url 'delete_order' orders.id %}" method="POST">
+                            {% csrf_token %}
+                            <button type="submit" class="btn btn-danger">Cancel Order</button>
+                        </form>
+                        {% else %}
+                        <strong style="color: red;">You cannot cancel your order after it has been shipped !</strong>
+                        {% endif %}
+                    </div>
+                  </div>
+                
+            </div>
+    </div>
+</div>
+
+{% endfor %}
+<br><br><br><br>
+
+{% endblock content %}

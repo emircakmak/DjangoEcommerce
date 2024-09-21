@@ -1,0 +1,65 @@
+{% extends "store/base.html" %}
+{% load static %}
+
+
+{% block content %}
+<link href="{% static "css/contact.css" %}" rel="stylesheet" />
+
+
+<div class="background">
+    <div class="container">
+      <div class="screen">
+        <div class="screen-header">
+          <div class="screen-header-left">
+            <div class="screen-header-button close"></div>
+            <div class="screen-header-button maximize"></div>
+            <div class="screen-header-button minimize"></div>
+          </div>
+          <div class="screen-header-right">
+            <div class="screen-header-ellipsis"></div>
+            <div class="screen-header-ellipsis"></div>
+            <div class="screen-header-ellipsis"></div>
+          </div>
+        </div>
+        <div class="screen-body">
+          <div class="screen-body-item left">
+            <div class="app-title">
+              <span>CONTACT</span>
+              <span>US</span>
+            </div>
+            <div class="app-contact">CONTACT INFO : +111 111 111 111</div>
+          </div>
+          <div class="screen-body-item">
+            <form method="POST">
+                {% csrf_token %}
+                <div class="app-form">
+                    <div class="app-form-group">
+                        <input class="app-form-control" id="id_name" name="name" placeholder="NAME" value="{{ form.name.value|default_if_none:'' }}">
+                    </div>
+                    <div class="app-form-group">
+                        <input class="app-form-control" id="id_email" name="email" placeholder="EMAIL" value="{{ form.email.value|default_if_none:'' }}">
+                    </div>
+                    <div class="app-form-group">
+                        <input class="app-form-control" id="id_phone" name="phone" placeholder="PHONE" value="{{ form.phone.value|default_if_none:'' }}">
+                    </div>
+                    <div class="app-form-group message">
+                        <input class="app-form-control" id="id_message" name="message" placeholder="MESSAGE" value="{{ form.message.value|default_if_none:'' }}">
+                    </div>
+                
+                <div class="app-form-group buttons">
+                    <br>
+                <button class="app-form-button">SEND</button>
+            </form>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <br><br><br><br>
+  
+
+
+
+{% endblock content %}

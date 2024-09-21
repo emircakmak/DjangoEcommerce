@@ -1,0 +1,98 @@
+
+<nav class="bg-white shadow">
+    <div class="container mx-auto px-6 py-3 md:flex md:justify-between md:items-center">
+      <div class="flex justify-between items-center">
+        <div>
+          <a class="text-gray-800 text-xl font-bold md:text-2xl hover:text-gray-700" href="{% url "home" %}">Store</a>
+        </div>
+
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        <a class="my-1 text-sm text-gray-700 font-medium hover:text-indigo-500 md:mx-4 md:my-0">
+          <form action="{% url "search" %}" method="POST">
+            {% csrf_token %}
+                <input type="text" class="form-control" placeholder="Search Products" name="searched">
+          </form>
+        </a>
+
+  
+        <!-- Mobile menu button -->
+        <div class="flex md:hidden">
+          <button type="button" class="text-gray-500 hover:text-gray-600 focus:outline-none focus:text-gray-600" aria-label="toggle menu">
+            <svg viewBox="0 0 24 24" class="h-6 w-6 fill-current">
+              <path fill-rule="evenodd" d="M4 5h16a1 1 0 0 1 0 2H4a1 1 0 1 1 0-2zm0 6h16a1 1 0 0 1 0 2H4a1 1 0 0 1 0-2zm0 6h16a1 1 0 0 1 0 2H4a1 1 0 0 1 0-2z"></path>
+            </svg>
+          </button>
+        </div>
+      </div>
+  
+      <!-- Mobile Menu open: "block", Menu closed: "hidden" -->
+      <div class="md:flex items-center">
+        <div class="flex flex-col md:flex-row md:mx-6">
+         
+          <a class="my-1 text-sm text-gray-700 font-medium hover:text-indigo-500 md:mx-4 md:my-0" href="{% url "home" %}">Home</a>
+
+          <a>
+                <a class="nav-link dropdown-toggle my-1 text-sm text-gray-700 font-medium hover:text-indigo-500 md:mx-4 md:my-0" id="navbarDropdown" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">Categories</a>
+                <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                    <li><a class="dropdown-item" href="{% url "category_summary" %}">All Products</a></li>
+                    <li><hr class="dropdown-divider" /></li>
+                    <li><a class="dropdown-item" href="{% url "category" "iPhone" %}">iPhones</a></li>
+                    <li><a class="dropdown-item" href="{% url "category" "Macbook" %}">Macbook</a></li>
+                    <li><a class="dropdown-item" href="{% url "category" "Mac" %}">iMac</a></li>
+                    <li><a class="dropdown-item" href="{% url "category" "Watch" %}">Watch</a></li>
+                    <li><a class="dropdown-item" href="{% url "category" "iPad" %}">iPad</a></li>
+                </ul>
+            </a>
+        </a>
+
+          <a class="my-1 text-sm text-gray-700 font-medium hover:text-indigo-500 md:mx-4 md:my-0" href="{% url "contact" %}">Contact</a>
+          <a class="my-1 text-sm text-gray-700 font-medium hover:text-indigo-500 md:mx-4 md:my-0" href="{% url "about" %}">About</a>
+
+          {% if user.is_authenticated %}
+          
+            <a class="nav-link dropdown-toggle my-1 text-sm text-gray-700 font-medium hover:text-indigo-500 md:mx-4 md:my-0" id="navbarDropdown" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">Profile</a>
+            <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                <li><a class="dropdown-item" href="{% url "update_user" %}">Your Profile</a></li>
+                <li><a class="dropdown-item" href="{% url "update_info" %}">Your Addresses</a></li>
+                <li><a class="dropdown-item" href="{% url "user_order" %}">Your Orders</a></li>
+                <li><a class="dropdown-item" href="{% url "update_password" %}">Change Password</a></li>
+            </ul>
+        
+
+          {% if user.is_superuser %}
+
+            <a class="nav-link dropdown-toggle my-1 text-sm text-gray-700 font-medium hover:text-indigo-500 md:mx-4 md:my-0" id="navbarDropdown" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">Orders</a>
+            <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                <li><a class="dropdown-item" href="{% url "shipped_dash" %}">Shipped Orders</a></li>
+                <li><hr class="dropdown-divider" /></li>
+                <li><a class="dropdown-item" href="{% url "not_shipped_dash" %}">Un-Shipped Orders</a></li>
+            </ul>
+        </a>
+
+          {% endif %}
+
+          <a class="my-1 text-sm text-gray-700 font-medium hover:text-indigo-500 md:mx-4 md:my-0" href="{% url "logout" %}">Logout</a>
+          
+          {% else %}
+
+          <a class="my-1 text-sm text-gray-700 font-medium hover:text-indigo-500 md:mx-4 md:my-0" href="{% url "login" %}">Login</a>
+          <a class="my-1 text-sm text-gray-700 font-medium hover:text-indigo-500 md:mx-4 md:my-0" href="{% url "register" %}">Register</a>
+          
+          {% endif %}
+
+        
+         
+        </div>
+  
+        <div class="flex justify-center md:block">
+            <form class="d-flex">
+                <a href="{% url "cart_summary" %}" class="btn btn-outline-dark"><i class="bi-cart-fill me-1"></i>
+                    Cart
+                    <span class="badge bg-dark text-white ms-1 rounded-pill" id="cart_quantity">{{ cart|length }}</span></a>
+            </form>
+        </div>
+      </div>
+    </div>
+  </nav>
